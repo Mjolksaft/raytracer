@@ -10,12 +10,12 @@
 
 
 int main() {  
-    // std::vector<sphere> spheres;
-    // spheres.emplace_back(sphere(2, vec3(0.5,0,-3)));
-    // spheres.emplace_back(sphere(1, vec3(-0.5,0,-2)));
+    std::vector<sphere> spheres;
+    spheres.emplace_back(sphere(2, vec3(0.5,0,-3)));
+    spheres.emplace_back(sphere(1, vec3(-0.5,0,-2)));
 
     camera c;
     c.aspect_ratio = 16./9.;  
-    c.render(sphere(1, vec3(-0.5,0,-2)));
+    c.render(spheres);
 
 }

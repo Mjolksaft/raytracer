@@ -22,7 +22,7 @@ public:
     vec3 position = vec3(0, 0, 0);
     int samples = 10;
 
-    void render(const sphere& s)
+    void render(const std::vector<sphere>& spheres)
     {
         initialize();
 
@@ -40,7 +40,7 @@ public:
                 for (int i = 0; i < samples; i++)
                 {
                     ray r = get_ray(x,y); // Ensure direction is normalized
-                    color += ray_color(r, s);
+                    color += ray_color(r, spheres);
                 }
 
                 color /= samples;
@@ -95,16 +95,22 @@ private:
         return ray(position, rand_point - position);
     }
 
-    vec3 ray_color(ray &r, const sphere& s)
+    vec3 ray_color(ray &r, const std::vector<sphere>& spheres)
     {
         hit_rec hr;
-        bool hit = s.intersection(r, hr);
-
-        if (hit)
-        {
-            vec3 scaled = (hr.n + 1.) * 0.5;
-            return scaled;
+        bool hit_anything = false;
+        for (const auto& s : spheres) {
+            if (s.intersection(r, hr)) hit_anything = true;
         }
+
+        
+
+        // for drawing normal map
+        // if (hit_anything)
+        // {
+        //     vec3 scaled = (hr.n + 1.) * 0.5;
+        //     return scaled;
+        // }
 
         vec3 unit = unit_vector(r.direction());
         unit = (unit + 1.) * 0.5;
