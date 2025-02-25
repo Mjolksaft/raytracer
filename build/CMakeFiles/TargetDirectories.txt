@@ -1,0 +1,3 @@
+C:/Users/kalla/git/test2/raytracer/build/CMakeFiles/raytracer.dir
+C:/Users/kalla/git/test2/raytracer/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/kalla/git/test2/raytracer/build/CMakeFiles/ZERO_CHECK.dir
