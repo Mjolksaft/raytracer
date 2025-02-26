@@ -1,0 +1,15 @@
+build/
+.vscode/
+build/.cmake/api/v1/reply/codemodel-v2-a822edb78777f7bfb3b8.json
+build/.cmake/api/v1/reply/index-2025-02-25T09-12-15-0828.json
+build/.cmake/api/v1/reply/target-ALL_BUILD-Debug-525c014a268213d9de2b.json
+build/.cmake/api/v1/reply/target-ALL_BUILD-MinSizeRel-525c014a268213d9de2b.json
+build/.cmake/api/v1/reply/target-ALL_BUILD-Release-525c014a268213d9de2b.json
+build/.cmake/api/v1/reply/target-ALL_BUILD-RelWithDebInfo-525c014a268213d9de2b.json
+build/CMakeFiles/CMakeConfigureLog.yaml
+build/CMakeFiles/3.31.5/CMakeDetermineCompilerABI_C.bin
+build/CMakeFiles/3.31.5/CMakeDetermineCompilerABI_CXX.bin
+build/CMakeFiles/3.31.5/CompilerIdC/CompilerIdC.exe
+build/CMakeFiles/3.31.5/CompilerIdC/Debug/CMakeCCompilerId.obj
+build/CMakeFiles/3.31.5/CompilerIdCXX/CompilerIdCXX.exe
+build/CMakeFiles/3.31.5/CompilerIdCXX/Debug/CMakeCXXCompilerId.obj

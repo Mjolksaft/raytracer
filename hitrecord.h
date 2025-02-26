@@ -4,9 +4,9 @@
 #include "vec3.h" 
 
 struct hit_rec {
-    point3 p;  // Point of intersection (using vec3 type)
-    vec3 n;    // Normal vector (using vec3 type)
-    double t;  // Intersection time (distance along the ray)
+    point3 p; 
+    vec3 n;   
+    double t; 
 };
 
 #endif
