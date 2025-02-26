@@ -6,6 +6,7 @@
 
 #include "sphere.h"
 #include "utility.h"
+#include "material.h"
 
 inline double linear_to_gamma(double linear_component)
 {
@@ -116,9 +117,17 @@ private:
         {
             // vec3 scaled = (hr.n + 1.) * 0.5;
             // return scaled;
-            vec3 direction = hr.n + random_unit_vector();
-            ray new_r = ray(hr.p, direction);
-            return  ray_color(new_r, spheres, bounces) * 0.5;
+
+            ray scattered;
+            vec3 attenuation;
+            if (hr.mat != nullptr)
+            {
+                if (hr.mat->scatter(r, hr, attenuation, scattered)){
+
+                    return attenuation * ray_color(scattered, spheres, bounces-1);
+                }
+                return vec3(0,0,0);
+            }
         }
 
         vec3 unit = unit_vector(r.direction());

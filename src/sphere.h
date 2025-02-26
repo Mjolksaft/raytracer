@@ -6,7 +6,7 @@
 class sphere
 {
 public:
-    sphere(double radius, vec3 center) : rad(radius), cen(center) {}
+    sphere(double radius, vec3 center, shared_ptr<material> mat) : rad(radius), cen(center), mat(mat) {}
 
     double radius() const { return rad; }
     vec3 center() const { return cen; }
@@ -30,6 +30,7 @@ public:
             hr.t = t0;
             hr.p = r.at(t0);
             hr.n = unit_vector(hr.p - center());
+            hr.mat = mat;
             return true;
         };
 
@@ -39,6 +40,7 @@ public:
             hr.t = t1;
             hr.p = r.at(t1);
             hr.n = unit_vector(hr.p - center());
+            hr.mat = mat;
             return true;
         };
 
@@ -48,6 +50,7 @@ public:
 private:
     double rad;
     vec3 cen;
+    shared_ptr<material> mat;
 };
 
 #endif

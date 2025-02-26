@@ -7,3 +7,7 @@ Then run cmake quickstart
 then find you exe file and run this in the terminal
 
 ./build/debug/raytracer.exe > image.ppm 
+
+TODO 
+Fix shadow acne 
+Make metal material
