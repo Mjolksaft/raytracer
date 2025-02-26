@@ -4,11 +4,17 @@
 #include <iostream>
 #include <vector>
 
-#include "vec3.h"
-#include "ray.h"
 #include "sphere.h"
 #include "utility.h"
-#include "hitrecord.h"
+
+inline double linear_to_gamma(double linear_component)
+{
+    if (linear_component > 0)
+        return std::sqrt(linear_component);
+
+    return 0;
+}
+
 
 class camera
 {
@@ -48,10 +54,13 @@ public:
                 // auto pixel0 = first_pixel + (pixeldelta_u * x) + ( pixeldelta_v * y);
                 // ray r(pixel0, pixel0 - position);
                 // color += ray_color(r, spheres, bounces);
-
-                int ri = int(clamp(color.x(), 0, 1) * 255.999);
-                int gi = int(clamp(color.y(), 0, 1) * 255.999);
-                int bi = int(clamp(color.z(), 0, 1) * 255.999);
+                auto r = linear_to_gamma(color.x());
+                auto g = linear_to_gamma(color.y());
+                auto b = linear_to_gamma(color.z());
+                
+                int ri = int(clamp(r, 0, 1) * 255.999);
+                int gi = int(clamp(g, 0, 1) * 255.999);
+                int bi = int(clamp(b, 0, 1) * 255.999);
                 std::cout << ri << ' ' << gi << ' ' << bi << '\n';
             }
         }
@@ -94,11 +103,6 @@ private:
 
     vec3 ray_color(ray &r, const std::vector<sphere> &spheres, int bounces)
     {
-        if (bounces <= 0)
-        {
-            return vec3(0, 0, 0);
-        }
-
         hit_rec hr;
         bool hit_anything = false;
         for (const auto &s : spheres)
@@ -112,13 +116,9 @@ private:
         {
             // vec3 scaled = (hr.n + 1.) * 0.5;
             // return scaled;
-
-            // calculate the new ray
-            vec3 rand_vec = random_unit(-1, 1);
-            vec3 valid_dir = random_valid(rand_vec, hr.n);
-            ray new_r(hr.p, rand_vec);
-
-            return ray_color(new_r, spheres, bounces - 1) * 0.5;
+            vec3 direction = hr.n + random_unit_vector();
+            ray new_r = ray(hr.p, direction);
+            return  ray_color(new_r, spheres, bounces) * 0.5;
         }
 
         vec3 unit = unit_vector(r.direction());

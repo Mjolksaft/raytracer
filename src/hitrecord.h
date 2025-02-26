@@ -1,7 +1,7 @@
 #ifndef HITRECORD_H
 #define HITRECORD_H
 
-#include "vec3.h" 
+class material;
 
 struct hit_rec {
     point3 p; 
@@ -9,4 +9,4 @@ struct hit_rec {
     double t = INFINITY; 
 };
 
-#endif
+#endif 

@@ -1,51 +1,53 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "vec3.h"
-#include "ray.h"
 #include "utility.h"
-#include "hitrecord.h"
 
-class sphere {
-    public: 
-        sphere(double radius, vec3 center) : rad(radius), cen(center) {}
+class sphere
+{
+public:
+    sphere(double radius, vec3 center) : rad(radius), cen(center) {}
 
-        double radius() const { return rad;}
-        vec3 center() const { return cen;}
+    double radius() const { return rad; }
+    vec3 center() const { return cen; }
 
-        bool intersection(ray& r, hit_rec& hr) const {
-            auto L = r.origin() - center();
-            auto a = dot(r.direction(), r.direction());
-            auto b = 2. * dot(r.direction(), L);
-            auto c = dot(L, L) - radius() * radius();
-        
-            auto disc = b * b - 4 * a * c;
-            if (disc < 0) {
-                return false;
-            }
-            
-            double t0 = (-b - sqrt(disc)) / (2. * a);
-            if (t0 > 0.1 && t0 < hr.t) { // check which point is closer
-                hr.t = t0;
-                hr.p = r.at(t0);
-                hr.n = (hr.p - center())/radius();
-                return true;
-            };
+    bool intersection(ray &r, hit_rec &hr) const
+    {
+        auto L = r.origin() - center();
+        auto a = dot(r.direction(), r.direction());
+        auto b = 2. * dot(r.direction(), L);
+        auto c = dot(L, L) - radius() * radius();
 
-            double t1 = (-b + sqrt(disc)) / (2. * a);
-            if (t1 > 0.1 && t1 < hr.t) {
-                hr.t = t1;
-                hr.p = r.at(t1);
-                hr.n = (hr.p - center())/radius();
-                return true;
-            };
-            
-            return false;  
+        auto disc = b * b - 4 * a * c;
+        if (disc < 0)
+        {
+            return false;
         }
 
-    private: 
-        double rad;
-        vec3 cen;
+        double t0 = (-b - sqrt(disc)) / (2. * a);
+        if (t0 > 0.001 && t0 < hr.t)
+        { // check which point is closer
+            hr.t = t0;
+            hr.p = r.at(t0);
+            hr.n = unit_vector(hr.p - center());
+            return true;
+        };
+
+        double t1 = (-b + sqrt(disc)) / (2. * a);
+        if (t1 > 0.001 && t1 < hr.t)
+        {
+            hr.t = t1;
+            hr.p = r.at(t1);
+            hr.n = unit_vector(hr.p - center());
+            return true;
+        };
+
+        return false;
+    }
+
+private:
+    double rad;
+    vec3 cen;
 };
 
 #endif
