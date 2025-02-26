@@ -3,10 +3,10 @@
 #include <iostream> 
 #include <vector> 
 
-#include "vec3.h"
-#include "ray.h"
-#include "sphere.h"
-#include "camera.h"
+#include "src/vec3.h"
+#include "src/ray.h"
+#include "src/sphere.h"
+#include "src/camera.h"
 
 
 int main() {  

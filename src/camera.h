@@ -57,22 +57,17 @@ public:
 
 private:
     int image_height;
-
     double viewport_width;
-
     vec3 viewport_u;
     vec3 viewport_v;
-
     vec3 pixeldelta_u;
     vec3 pixeldelta_v;
-
-    // Place viewport at +Z instead of -Z
     vec3 top_left;
     vec3 first_pixel;
 
     void initialize()
     {
-        image_height = int(image_width / aspect_ratio); // rounds to int
+        image_height = int(image_width / aspect_ratio);
 
         viewport_width = viewport_height * (double(image_width) / image_height);
 
