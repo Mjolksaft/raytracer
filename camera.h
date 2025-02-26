@@ -103,14 +103,12 @@ private:
             if (s.intersection(r, hr)) hit_anything = true;
         }
 
-        
-
         // for drawing normal map
-        // if (hit_anything)
-        // {
-        //     vec3 scaled = (hr.n + 1.) * 0.5;
-        //     return scaled;
-        // }
+        if (hit_anything)
+        {
+            vec3 scaled = (hr.n + 1.) * 0.5;
+            return scaled;
+        }
 
         vec3 unit = unit_vector(r.direction());
         unit = (unit + 1.) * 0.5;
