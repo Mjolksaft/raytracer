@@ -95,20 +95,18 @@ inline double dot(const vec3& v, const vec3& u)  {
     return v.x() * u.x() + v.y() * u.y() + v.z() * u.z(); 
 }
 
-inline vec3 random_unit_vector() {
-    while (true) {
-        auto p = vec3::random(-1,1);
-        auto lensq = p.length_squared();
-        if (1e-160 < lensq && lensq <= 1)
-            return p / sqrt(lensq);
+inline vec3 random_unit(double min, double max) {
+    vec3 rand_vec3 = vec3().random(-1,1);
+    return unit_vector(rand_vec3);
+}
+
+inline vec3 random_valid(const vec3& v, const vec3& dir) {
+    double same = dot(v, dir);
+    if(same < 0) {
+        return v * -1.;
+    } else {
+        return v;
     }
 }
 
-inline vec3 random_on_hemisphere(const vec3& normal) {
-    vec3 on_unit_sphere = random_unit_vector();
-    if (dot(on_unit_sphere, normal) > 0.0) // correct direction
-        return on_unit_sphere;
-    else
-        return on_unit_sphere *= -1.;
-}
 #endif

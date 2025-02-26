@@ -6,7 +6,7 @@
 struct hit_rec {
     point3 p; 
     vec3 n;   
-    double t; 
+    double t = INFINITY; 
 };
 
 #endif

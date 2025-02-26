@@ -10,19 +10,18 @@
 #include "utility.h"
 #include "hitrecord.h"
 
-
 class camera
 {
 public:
-
-    double aspect_ratio = 1.;    
+    double aspect_ratio = 1.;
     int image_width = 400;
     double focal_length = 1.;
     double viewport_height = 2.;
     vec3 position = vec3(0, 0, 0);
     int samples = 10;
+    int bounces = 10;
 
-    void render(const std::vector<sphere>& spheres)
+    void render(const std::vector<sphere> &spheres)
     {
         initialize();
 
@@ -36,24 +35,27 @@ public:
             for (int x = 0; x < image_width; x++)
             {
                 vec3 color(0, 0, 0);
+
+                // for anti aliasing
                 // generate a ray directed at a random point around [x,y]
                 for (int i = 0; i < samples; i++)
                 {
-                    ray r = get_ray(x,y); // Ensure direction is normalized
-                    color += ray_color(r, spheres);
+                    ray r = get_ray(x, y); // Ensure direction is normalized
+                    color += ray_color(r, spheres, bounces);
                 }
-
                 color /= samples;
 
+                // auto pixel0 = first_pixel + (pixeldelta_u * x) + ( pixeldelta_v * y);
+                // ray r(pixel0, pixel0 - position);
+                // color += ray_color(r, spheres, bounces);
+
                 int ri = int(clamp(color.x(), 0, 1) * 255.999);
-                int gi = int(clamp(color.y(), 0, 1)  * 255.999);
-                int bi = int(clamp(color.z(), 0, 1)  * 255.999);
+                int gi = int(clamp(color.y(), 0, 1) * 255.999);
+                int bi = int(clamp(color.z(), 0, 1) * 255.999);
                 std::cout << ri << ' ' << gi << ' ' << bi << '\n';
             }
         }
     }
-
-
 
 private:
     int image_height;
@@ -79,30 +81,44 @@ private:
 
         top_left = position - vec3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
         first_pixel = top_left + (pixeldelta_u + pixeldelta_v) * 0.5;
-
     }
 
-    ray get_ray(int x, int y) {
-        
-        point3 random_offset = point3(rand_double(-0.5,0.5), rand_double(-0.5,0.5), 0);
-        point3 rand_point = first_pixel + (pixeldelta_u * (x + random_offset.x())) + ( pixeldelta_v * (y + random_offset.y()));
+    ray get_ray(int x, int y)
+    {
+
+        point3 random_offset = point3(rand_double(-0.5, 0.5), rand_double(-0.5, 0.5), 0);
+        point3 rand_point = first_pixel + (pixeldelta_u * (x + random_offset.x())) + (pixeldelta_v * (y + random_offset.y()));
 
         return ray(position, rand_point - position);
     }
 
-    vec3 ray_color(ray &r, const std::vector<sphere>& spheres)
+    vec3 ray_color(ray &r, const std::vector<sphere> &spheres, int bounces)
     {
+        if (bounces <= 0)
+        {
+            return vec3(0, 0, 0);
+        }
+
         hit_rec hr;
         bool hit_anything = false;
-        for (const auto& s : spheres) {
-            if (s.intersection(r, hr)) hit_anything = true;
+        for (const auto &s : spheres)
+        {
+            if (s.intersection(r, hr))
+                hit_anything = true;
         }
 
         // for drawing normal map
         if (hit_anything)
         {
-            vec3 scaled = (hr.n + 1.) * 0.5;
-            return scaled;
+            // vec3 scaled = (hr.n + 1.) * 0.5;
+            // return scaled;
+
+            // calculate the new ray
+            vec3 rand_vec = random_unit(-1, 1);
+            vec3 valid_dir = random_valid(rand_vec, hr.n);
+            ray new_r(hr.p, rand_vec);
+
+            return ray_color(new_r, spheres, bounces - 1) * 0.5;
         }
 
         vec3 unit = unit_vector(r.direction());
@@ -110,7 +126,5 @@ private:
         return vec3(1, 1, 1) * (1. - unit.y()) + vec3(0.5, 0.7, 1.) * unit.y();
     };
 };
-
-
 
 #endif
