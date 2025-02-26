@@ -1,0 +1,9 @@
+To start: 
+
+build: 
+ctrl + shift + p
+Then run cmake quickstart 
+
+then find you exe file and run this in the terminal
+
+./build/debug/raytracer.exe > image.ppm 
