@@ -112,10 +112,9 @@ inline vec3 random_unit_vector() {
             return p / sqrt(lensq);
     }
 }
-
 inline vec3 random_on_hemisphere(const vec3& normal) {
     vec3 on_unit_sphere = random_unit_vector();
-    if (dot(on_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
+    if (dot(on_unit_sphere, normal) > 0.0) 
         return on_unit_sphere;
     else
         return on_unit_sphere * -1.;

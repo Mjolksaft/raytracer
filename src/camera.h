@@ -43,25 +43,26 @@ public:
             {
                 vec3 color(0, 0, 0);
 
-                // for anti aliasing
-                // generate a ray directed at a random point around [x,y]
-                for (int i = 0; i < samples; i++)
-                {
-                    ray r = get_ray(x, y); // Ensure direction is normalized
-                    color += ray_color(r, spheres, bounces);
-                }
-                color /= samples;
+                // // for anti aliasing
+                // // generate a ray directed at a random point around [x,y]
+                // for (int i = 0; i < samples; i++)
+                // {
+                //     ray r = get_ray(x, y); // Ensure direction is normalized
+                //     color += ray_color(r, spheres, bounces);
+                // }
+                // color /= samples;
 
-                // auto pixel0 = first_pixel + (pixeldelta_u * x) + ( pixeldelta_v * y);
-                // ray r(pixel0, pixel0 - position);
-                // color += ray_color(r, spheres, bounces);
+                auto pixel0 = first_pixel + (pixeldelta_u * x) + ( pixeldelta_v * y);
+                ray r_(pixel0, pixel0 - position);
+                color += ray_color(r_, spheres, bounces);
+
                 auto r = linear_to_gamma(color.x());
                 auto g = linear_to_gamma(color.y());
                 auto b = linear_to_gamma(color.z());
                 
-                int ri = int(clamp(r, 0, 1) * 255.999);
-                int gi = int(clamp(g, 0, 1) * 255.999);
-                int bi = int(clamp(b, 0, 1) * 255.999);
+                int ri = int(clamp(color.x(), 0, 1) * 255.999);
+                int gi = int(clamp(color.y(), 0, 1) * 255.999);
+                int bi = int(clamp(color.z(), 0, 1) * 255.999);
                 std::cout << ri << ' ' << gi << ' ' << bi << '\n';
             }
         }
@@ -104,6 +105,10 @@ private:
 
     vec3 ray_color(ray &r, const std::vector<sphere> &spheres, int bounces)
     {
+        if(bounces < 0 ) {
+            return vec3(0,0,0);
+        }
+
         hit_rec hr;
         bool hit_anything = false;
         for (const auto &s : spheres)
@@ -115,19 +120,32 @@ private:
         // for drawing normal map
         if (hit_anything)
         {
-            // vec3 scaled = (hr.n + 1.) * 0.5;
+            // vec3 scaled =  (hr.n + 1.) * 0.5;
             // return scaled;
 
-            ray scattered;
-            vec3 attenuation;
-            if (hr.mat != nullptr)
-            {
-                if (hr.mat->scatter(r, hr, attenuation, scattered)){
+            // get the point 
+            point3 p = hr.p;
+            // calculate a new random vector 
+            vec3 rand_vec = random_unit_vector();
 
-                    return attenuation * ray_color(scattered, spheres, bounces-1);
-                }
-                return vec3(0,0,0);
+            // check if new dir is valid via dot product 
+            if(dot(rand_vec, hr.n) < 0) {
+                rand_vec *= -1.;
             }
+
+            // send out a new ray 
+            ray new_r(hr.p + hr.n * 1e-4, rand_vec); // move the point outside of the sphere
+            return ray_color(new_r, spheres, bounces-1) * 0.5;
+
+
+            // ray scattered;
+            // vec3 attenuation;
+
+            // if (hr.mat->scatter(r, hr, attenuation, scattered)){
+
+            //     return attenuation * ray_color(scattered, spheres, bounces-1);
+            // }
+            // return vec3(0,0,0);
         }
 
         vec3 unit = unit_vector(r.direction());

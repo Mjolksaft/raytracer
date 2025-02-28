@@ -29,7 +29,7 @@ public:
         { // check which point is closer
             hr.t = t0;
             hr.p = r.at(t0);
-            hr.n = unit_vector(hr.p - center());
+            hr.n = unit_vector(r.at(t0) - center());
             hr.mat = mat;
             return true;
         };
@@ -39,7 +39,7 @@ public:
         {
             hr.t = t1;
             hr.p = r.at(t1);
-            hr.n = unit_vector(hr.p - center());
+            hr.n = unit_vector(r.at(t1) - center());
             hr.mat = mat;
             return true;
         };
