@@ -22,7 +22,10 @@ int main() {
     spheres.emplace_back(sphere(100, vec3(0,-100,-16), material_ground));
 
     camera c;
-    c.aspect_ratio = 16./9.;
+    c.aspect_ratio      = 16.0 / 9.0;
+    // c.image_width       = 400;
+    // c.samples           = 100;
+    // c.bounces           = 50;
     c.render(spheres);
 
 }

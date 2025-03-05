@@ -25,7 +25,7 @@ public:
         }
 
         double t0 = (-b - sqrt(disc)) / (2. * a);
-        if (t0 > 0.001 && t0 < hr.t)
+        if (t0 > 0 && t0 < hr.t)
         { // check which point is closer
             hr.t = t0;
             hr.p = r.at(t0);
@@ -35,7 +35,7 @@ public:
         };
 
         double t1 = (-b + sqrt(disc)) / (2. * a);
-        if (t1 > 0.001 && t1 < hr.t)
+        if (t1 > 0 && t1 < hr.t)
         {
             hr.t = t1;
             hr.p = r.at(t1);
